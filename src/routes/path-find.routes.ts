@@ -44,7 +44,6 @@ const findShortestPath = (
   let distances: Record<string, number> = {};
   distances[endNode] = Infinity;
   distances = Object.assign(distances, paths[startNode]);
-
   // track paths using a hash object
   const parents: Record<string, string | null> = { [endNode]: null };
   for (const child in paths[startNode]) {
@@ -55,7 +54,6 @@ const findShortestPath = (
   const visited: string[] = [];
   // find the nearest node
   let node = shortestDistanceNode(distances, visited);
-
   // for that node:
   while (node) {
     // find its distance from the start node & its child nodes
@@ -64,15 +62,20 @@ const findShortestPath = (
 
     // for each of those child nodes:
     for (const child in children) {
-      // save the distance from the start node to the child node
-      const newdistance = distance + children[child];
-      // if there's no recorded distance from the start node to the child node in the distances object
-      // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
-      if (!distances[child] || distances[child] > newdistance) {
-        // save the distance to the object
-        distances[child] = newdistance;
-        // record the path
-        parents[child] = node;
+      if (String(child) === String(startNode)) {
+        console.log("WE DON't HAVE TO START NODE AGAIN");
+        continue;
+      } else {
+        // save the distance from the start node to the child node
+        const newdistance = distance + children[child];
+        // if there's no recorded distance from the start node to the child node in the distances object
+        // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
+        if (!distances[child] || distances[child] > newdistance) {
+          // save the distance to the object
+          distances[child] = newdistance;
+          // record the path
+          parents[child] = node;
+        }
       }
     }
     // move the current node to the visited set
