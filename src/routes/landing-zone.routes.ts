@@ -33,7 +33,6 @@ router.get(
 
     const isValid = isValidLandingZone(coordinates);
     const end = performance.now();
-
     res.status(200).send({
       zone,
       isValid,
@@ -44,18 +43,22 @@ router.get(
 
 // Function to update
 export const isValidLandingZone = ({ R1: arr1, R2: arr2 }: ICoordinates) => {
-  const valid: boolean[] = [];
-  for (let i = 0; i < arr2.length; i++) {
-    for (let j = 0; j < arr1.length; j++) {
-      if (arr2[i] === arr1[j]) {
-        valid.push(true);
-      }
+  let isValidZone = true;
+  const hash = {};
+  for (const coordinate in arr1) {
+    if (hash.hasOwnProperty(arr1[coordinate])) {
+      hash[arr1[coordinate]] += 1;
+    } else {
+      hash[arr1[coordinate]] = 1;
     }
   }
-  if (valid.length === arr2.length) {
-    return true;
+
+  // NOW CHECK IF ALL COORDINATE IN R2 ARE PRESENT IN HASH CREATED
+
+  for (const coordinate in arr2) {
+    if (!hash.hasOwnProperty(arr2[coordinate])) isValidZone = false;
   }
-  return false;
+  return isValidZone;
 };
 
 export default router;
